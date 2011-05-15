@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>780cde16-98ef-4cdc-917a-bca99d66a092</ProjectGuid>
+    <ProjectGuid>{B00B782F-4DC7-46A6-AA68-C725F46CB8CF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Retreave.Domain</RootNamespace>
@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Ninject">
+      <HintPath>..\packages\Ninject.2.2.1.4\lib\net40-Full\Ninject.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -40,8 +43,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="Enums\IndexType.cs" />
+    <Compile Include="Models\Index.cs" />
+    <Compile Include="Models\Linker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Models\Result.cs" />
+    <Compile Include="Models\ResultSet.cs" />
+    <Compile Include="Models\SearchQuery.cs" />
+    <Compile Include="Services\IndexQueuer.cs" />
+    <Compile Include="Services\ProfileEditor.cs" />
+    <Compile Include="Services\SearchEngine.cs" />
+    <Compile Include="Models\User.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
