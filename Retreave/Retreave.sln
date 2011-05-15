@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Retreave.Tests", "Retreave.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Retreave.SearchEngine", "Retreave.SearchEngine\Retreave.SearchEngine.csproj", "{F6A08753-48C5-4C3A-A7F1-413FA6B1E9E8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Retreave.Indexer", "Retreave.Indexer\Retreave.Indexer.csproj", "{584D3B65-B772-413E-A787-5BBEA2FA12C8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +61,16 @@ Global
 		{F6A08753-48C5-4C3A-A7F1-413FA6B1E9E8}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{F6A08753-48C5-4C3A-A7F1-413FA6B1E9E8}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{F6A08753-48C5-4C3A-A7F1-413FA6B1E9E8}.Release|x86.ActiveCfg = Release|Any CPU
+		{584D3B65-B772-413E-A787-5BBEA2FA12C8}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{584D3B65-B772-413E-A787-5BBEA2FA12C8}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{584D3B65-B772-413E-A787-5BBEA2FA12C8}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{584D3B65-B772-413E-A787-5BBEA2FA12C8}.Debug|x86.ActiveCfg = Debug|x86
+		{584D3B65-B772-413E-A787-5BBEA2FA12C8}.Debug|x86.Build.0 = Debug|x86
+		{584D3B65-B772-413E-A787-5BBEA2FA12C8}.Release|Any CPU.ActiveCfg = Release|x86
+		{584D3B65-B772-413E-A787-5BBEA2FA12C8}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{584D3B65-B772-413E-A787-5BBEA2FA12C8}.Release|Mixed Platforms.Build.0 = Release|x86
+		{584D3B65-B772-413E-A787-5BBEA2FA12C8}.Release|x86.ActiveCfg = Release|x86
+		{584D3B65-B772-413E-A787-5BBEA2FA12C8}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

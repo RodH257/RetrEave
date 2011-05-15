@@ -1,0 +1,12 @@
+﻿@{
+    ViewBag.Title = "Authorize Callback";
+    ViewBag.Heading = "Authorization Complete";
+}
+
+@ViewBag.Message
+
+@foreach (var tweet in ViewBag.Tweets)
+{
+
+<text>@tweet.Text</text> <br />
+} 
