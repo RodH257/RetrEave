@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Retreave.Domain.Models;
+using Retreave.Domain.Services;
 using TweetSharp;
 using Retreave.Domain.Helpers;
 
@@ -36,28 +38,34 @@ namespace Retreave.Controllers
             var requestToken = new OAuthRequestToken { Token = oauth_token };
 
             // Step 3 - Exchange the Request Token for an Access Token
-            TwitterService service = new TwitterService(AuthenticationTokens.TwitterConsumerKey,AuthenticationTokens.TwitterConsumerSecret);
+            TwitterService service = new TwitterService(AuthenticationTokens.TwitterConsumerKey, AuthenticationTokens.TwitterConsumerSecret);
             OAuthAccessToken accessToken = service.GetAccessToken(requestToken, oauth_verifier);
-            
+
 
             //Store the access token and secret and create a new user account
+            TwitterAuthentication authToStore = new TwitterAuthentication()
+                                                    {
+                                                        AccessToken = accessToken.Token,
+                                                        AccessTokenSecret = accessToken.TokenSecret
+                                                    };
 
+            TwitterUser twitterUser = service.VerifyCredentials();
+            RegisteredUser user = new RegisteredUser()
+                                      {
+                                          AuthDetails = authToStore,
+                                          UserName = twitterUser.Name,
+
+                                      };
+
+            IIndexQueuerService indexQueuerService =  ServiceLayer.IndexQueuerService;
+            indexQueuerService.QueueUserStreamIndex(user);
             //Queue the users account tweets for indexing
 
 
 
-            //store the access token and access token secret
+            //store the access token and access token secret);););
 
             return RedirectToAction("ViewTweets", new { accessToken = accessToken.Token, accessTokenSecret = accessToken.TokenSecret });
-
-            // Step 4 - User authenticates using the Access Token
-            //service.AuthenticateWith(accessToken.Token, accessToken.TokenSecret);
-          //  TwitterUser user = service.VerifyCredentials();
-            
-          //  ViewBag.Message = string.Format("Your username is {0}", user.ScreenName);
-            
-
-            return View();
         }
 
         public ActionResult ViewTweets(string accessToken, string accessTokenSecret)
@@ -65,14 +73,15 @@ namespace Retreave.Controllers
             TwitterService service2 = new TwitterService(AuthenticationTokens.TwitterConsumerKey, AuthenticationTokens.TwitterConsumerSecret);
 
             service2.AuthenticateWith(
-                AuthenticationTokens.TwitterConsumerKey, AuthenticationTokens.TwitterConsumerSecret,
+                AuthenticationTokens.TwitterConsumerKey,
+                AuthenticationTokens.TwitterConsumerSecret,
             accessToken, accessTokenSecret);
             TwitterUser user2 = service2.VerifyCredentials();
             var tweets = service2.ListTweetsMentioningMe(5);
-            
+
             ViewBag.Message = string.Format("Your username is {0}", user2.ScreenName);
             ViewBag.Tweets = tweets;
-            
+
             return View("AuthorizeCallback");
         }
 

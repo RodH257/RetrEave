@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Dapper">
+      <HintPath>..\packages\Dapper.1.1\lib\Dapper.dll</HintPath>
+    </Reference>
     <Reference Include="Ninject">
       <HintPath>..\packages\Ninject.2.2.1.4\lib\net40-Full\Ninject.dll</HintPath>
     </Reference>
@@ -43,19 +46,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataAccess\IDao.cs" />
+    <Compile Include="DataAccess\UserDao.cs" />
     <Compile Include="Enums\IndexType.cs" />
     <Compile Include="Helpers\AuthenticationTokens.cs" />
+    <Compile Include="Infrastructure\ResolveType.cs" />
     <Compile Include="Models\Index.cs" />
     <Compile Include="Models\Linker.cs" />
+    <Compile Include="Models\TwitterAuthentication.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\Result.cs" />
     <Compile Include="Models\ResultSet.cs" />
     <Compile Include="Models\SearchQuery.cs" />
-    <Compile Include="Services\IndexQueuer.cs" />
-    <Compile Include="Services\ProfileEditor.cs" />
-    <Compile Include="Services\SearchEngine.cs" />
-    <Compile Include="Models\User.cs" />
+    <Compile Include="Services\IIndexQueuerService.cs" />
+    <Compile Include="Services\IndexQueuerService.cs" />
+    <Compile Include="Services\IUserDetailsService.cs" />
+    <Compile Include="Services\UserDetailsService.cs" />
+    <Compile Include="Services\SearchEngineService.cs" />
+    <Compile Include="Models\RegisteredUser.cs" />
+    <Compile Include="Services\ServiceLayer.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

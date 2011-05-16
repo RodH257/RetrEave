@@ -9,6 +9,6 @@ namespace Retreave.Domain.Models
     {
         public IList<Index> IndexesToSearch { get; set; }
         public string QueryText { get; set; }
-        public User Querier { get; set; }
+        public RegisteredUser Querier { get; set; }
     }
 }

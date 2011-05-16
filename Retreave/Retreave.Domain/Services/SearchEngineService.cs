@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Retreave.Domain.Services
 {
-    class ProfileEditor
+    class SearchEngineService
     {
     }
 }
