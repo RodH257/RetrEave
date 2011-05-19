@@ -6,19 +6,22 @@ using Retreave.Domain.Models;
 
 namespace Retreave.Domain.DataAccess
 {
-   public class UserDao: IDao<RegisteredUser, int> 
+    /// <summary>
+    /// Data access for Index
+    /// </summary>
+    public class IndexDao: IIndexDao
     {
-        public RegisteredUser GetById(int id)
+        public Index GetById(int id)
         {
             throw new NotImplementedException();
         }
 
-        public RegisteredUser SaveOrUpdate(RegisteredUser entity)
+        public Index SaveOrUpdate(Index entity)
         {
             throw new NotImplementedException();
         }
 
-        public void Delete(RegisteredUser entity)
+        public void Delete(Index entity)
         {
             throw new NotImplementedException();
         }

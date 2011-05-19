@@ -50,20 +50,21 @@ namespace Retreave.Controllers
                                                     };
 
             TwitterUser twitterUser = service.VerifyCredentials();
+
+            //save the user details 
             RegisteredUser user = new RegisteredUser()
                                       {
                                           AuthDetails = authToStore,
                                           UserName = twitterUser.Name,
 
                                       };
+            IUserDetailsService userDetailsService = ServiceLayer.UserDetailsService;
+            userDetailsService.CreateUser(user);
 
+            //setup the indexing of their tweets
             IIndexQueuerService indexQueuerService =  ServiceLayer.IndexQueuerService;
             indexQueuerService.QueueUserStreamIndex(user);
-            //Queue the users account tweets for indexing
 
-
-
-            //store the access token and access token secret);););
 
             return RedirectToAction("ViewTweets", new { accessToken = accessToken.Token, accessTokenSecret = accessToken.TokenSecret });
         }
