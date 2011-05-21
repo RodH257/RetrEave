@@ -48,13 +48,13 @@
     <Compile Include="DataAccess\IDao.cs" />
     <Compile Include="DataAccess\IIndexDao.cs" />
     <Compile Include="DataAccess\IndexDao.cs" />
+    <Compile Include="DataAccess\PetaPoco.cs" />
     <Compile Include="DataAccess\RegisteredUserDao.cs" />
     <Compile Include="Enums\IndexType.cs" />
     <Compile Include="Helpers\AuthenticationTokens.cs" />
     <Compile Include="Infrastructure\ResolveType.cs" />
     <Compile Include="Models\Index.cs" />
     <Compile Include="Models\Linker.cs" />
-    <Compile Include="Models\PetaPoco.cs" />
     <Compile Include="Models\TwitterAuthentication.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\Result.cs" />

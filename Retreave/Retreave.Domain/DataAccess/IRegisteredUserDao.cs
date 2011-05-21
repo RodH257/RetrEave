@@ -7,6 +7,6 @@ namespace Retreave.Domain.DataAccess
     /// </summary>
     public interface IRegisteredUserDao: IDao<RegisteredUser, int>
     {
-
+        RegisteredUser GetUserByUserName(string userName);
     }
 }

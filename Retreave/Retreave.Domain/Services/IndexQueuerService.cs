@@ -1,4 +1,7 @@
-﻿using Retreave.Domain.DataAccess;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Retreave.Domain.DataAccess;
 using Retreave.Domain.Models;
 
 namespace Retreave.Domain.Services
@@ -23,6 +26,38 @@ namespace Retreave.Domain.Services
             //add a a new StreamIndex to the users indexes
             Index streamIndex =  user.AddTwitterStreamIndex();
             _indexDao.SaveOrUpdate(streamIndex);
+        }
+
+
+        /// <summary>
+        /// Gets the next index to process
+        /// </summary>
+        public Index GetNextIndexToProcess()
+        {
+          //first, see if there is any indexes that have not ever been processed.
+            IEnumerable<Index> unprocessedIndexes = _indexDao.GetUnprocessedIndexes();
+
+            if (unprocessedIndexes.Count() > 0)
+                return unprocessedIndexes.First();
+
+            //get the most outdated index.
+            //this may one day get updated with some sort of weighting on indexes,
+            // ie most frequent visitors or something
+
+            //Make sure the index is at least 5 minutes old
+            DateTime fiveMinutesAgo = DateTime.Now.AddMinutes(-5);
+
+            return _indexDao.GetMostOutdatedIndex(fiveMinutesAgo);
+        }
+
+
+        /// <summary>
+        /// Sets an index complete.
+        /// </summary>
+        /// <param name="indexId"></param>
+        public void MarkIndexComplete(int indexId)
+        {
+            _indexDao.MarkProcessed(indexId, DateTime.Now);
         }
     }
 }

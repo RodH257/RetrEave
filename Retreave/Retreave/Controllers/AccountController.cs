@@ -43,30 +43,34 @@ namespace Retreave.Controllers
 
 
             //Store the access token and secret and create a new user account
-            TwitterAuthentication authToStore = new TwitterAuthentication()
+            TwitterAuthentication authentication = new TwitterAuthentication()
                                                     {
                                                         AccessToken = accessToken.Token,
                                                         AccessTokenSecret = accessToken.TokenSecret
                                                     };
 
+
+            //Authenticate account with twitter
+            service.AuthenticateWith(AuthenticationTokens.TwitterConsumerKey,
+                                        AuthenticationTokens.TwitterConsumerSecret,
+                                        authentication.AccessToken, authentication.AccessTokenSecret);
+
             TwitterUser twitterUser = service.VerifyCredentials();
 
-            //save the user details 
-            RegisteredUser user = new RegisteredUser()
-                                      {
-                                          AuthDetails = authToStore,
-                                          UserName = twitterUser.Name,
+            return RedirectToAction("UserProfile",new {authentication.AccessToken, authentication.AccessTokenSecret, twitterUser.ScreenName});
+        }
 
-                                      };
-            IUserDetailsService userDetailsService = ServiceLayer.UserDetailsService;
-            userDetailsService.CreateUser(user);
+        /// <summary>
+        /// Displays the users profile
+        /// </summary>
+        public ActionResult UserProfile(TwitterAuthentication authentication, string screenName)
+        {
+            //Now pass onto controller to see if they need to store or create an account.
+            RegisteredUser user = ServiceLayer.UserDetailsService.AuthenticateTwitterAccount(authentication, screenName);
 
-            //setup the indexing of their tweets
-            IIndexQueuerService indexQueuerService =  ServiceLayer.IndexQueuerService;
-            indexQueuerService.QueueUserStreamIndex(user);
-
-
-            return RedirectToAction("ViewTweets", new { accessToken = accessToken.Token, accessTokenSecret = accessToken.TokenSecret });
+            if (user == null)
+                return Content("Login Failed");
+            return View(user);
         }
 
         public ActionResult ViewTweets(string accessToken, string accessTokenSecret)

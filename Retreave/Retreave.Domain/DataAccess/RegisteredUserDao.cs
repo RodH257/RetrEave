@@ -24,7 +24,7 @@ namespace Retreave.Domain.DataAccess
         /// </summary>
         public RegisteredUser GetById(int id)
         {
-           return _database.SingleOrDefault<RegisteredUser>("where userId=@0", id);
+            return _database.SingleOrDefault<RegisteredUser>("where userId=@0", id);
         }
 
         /// <summary>
@@ -32,12 +32,58 @@ namespace Retreave.Domain.DataAccess
         /// </summary>
         public RegisteredUser SaveOrUpdate(RegisteredUser entity)
         {
-            throw new NotImplementedException();
+            if (_database.IsNew(entity))
+            {
+                _database.Insert(entity);
+                //save the authentication details
+                _database.Insert(entity.AuthDetails);
+            }
+            else
+            {
+                _database.Update(entity);
+            }
+
+
+
+            _database.Update<RegisteredUser>("SET AuthenticationDetails = @0 where UserId=@1",
+                                             entity.AuthDetails.AuthenticationDetailsId, entity.UserId);
+            return entity;
         }
 
         public void Delete(RegisteredUser entity)
         {
-            throw new NotImplementedException();
+            _database.Delete(entity);
+        }
+
+        public RegisteredUser GetUserByUserName(string userName)
+        {
+            var sql = PetaPoco.Sql.Builder
+                .Append("Select Users.*, Auth.* ")
+                .Append("FROM Users")
+                .Append("LEFT JOIN AuthenticationDetails Auth")
+                .Append("On Users.AuthenticationDetails = Auth.AuthenticationDetailsId")
+                .Append("Where Users.UserName = @0", userName);
+            
+
+            var results = _database.Query<RegisteredUser, TwitterAuthentication, RegisteredUser>
+                (
+                    (u, auth) =>
+                    {
+                        u.AuthDetails = auth;
+
+                        return u;
+                    }, sql
+
+                );
+
+            RegisteredUser user = results.FirstOrDefault();
+
+            if (user == null)
+                return null;
+
+
+
+            return user;
         }
     }
 }
