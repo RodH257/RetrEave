@@ -5,7 +5,7 @@ namespace Retreave.Domain.DataAccess
     /// <summary>
     /// Data access object interface for Indexes
     /// </summary>
-    public interface IIndexDao: IDao<Index, int>
+    public interface IIndexDao: IDao<RetreaveIndex, int>
     {
 
     }

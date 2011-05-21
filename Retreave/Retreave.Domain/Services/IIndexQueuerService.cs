@@ -10,7 +10,7 @@ namespace Retreave.Domain.Services
         /// Gets the next index to process in lucene
         /// </summary>
         /// <returns></returns>
-        Index GetNextIndexToProcess();
+        RetreaveIndex GetNextIndexToProcess();
 
         /// <summary>
         /// Marks an index as completely processed up to the current time. 

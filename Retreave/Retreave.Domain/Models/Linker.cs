@@ -7,7 +7,7 @@
     {
         public string Id { get; set; }
         public string Name { get; set;}
-        public Index Index { get; set; }
+        public RetreaveIndex Index { get; set; }
         public double ReputationScore { get; set; }
     }
 }

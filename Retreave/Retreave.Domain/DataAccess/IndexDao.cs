@@ -13,14 +13,22 @@ namespace Retreave.Domain.DataAccess
     public class IndexDao: IIndexDao
     {
         private PetaPoco.Database _database;
+        private RegisteredUserDao _registeredUserDao;
+
+        /// <summary>
+        /// Dependencies on the web config string
+        /// and also the registered user dao
+        /// </summary>
         public IndexDao()
         {
             _database = new Database("RetreaveSql");
+            _registeredUserDao = new RegisteredUserDao();
         }
 
-        public Index GetById(int id)
+        public RetreaveIndex GetById(int id)
         {
-            return _database.SingleOrDefault<Index>("where indexId=@0", id);
+            var result= _database.SingleOrDefault<RetreaveIndex>("where indexId=@0", id);
+            return FillResult(result);
         }
 
 
@@ -29,13 +37,24 @@ namespace Retreave.Domain.DataAccess
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public Index SaveOrUpdate(Index entity)
+        public RetreaveIndex SaveOrUpdate(RetreaveIndex entity)
         {
             if (_database.IsNew(entity))
                 _database.Insert(entity);
             else
                 _database.Update(entity);
 
+            //update the associated users 
+            _database.Execute("Delete from Users_Indexes where indexId=@0", entity.IndexId);
+            
+            foreach (RegisteredUser user in entity.AssociatedUsers)
+            {
+                if (_database.IsNew(user))
+                    throw new Exception("You must save the User entity first");
+
+                _database.Execute("Insert into Users_indexes (UserId, IndexId) values (@0, @1)", user.UserId,
+                                  entity.IndexId);
+            }
             return entity;
         }
 
@@ -44,7 +63,7 @@ namespace Retreave.Domain.DataAccess
         /// Deletes the index
         /// </summary>
         /// <param name="entity"></param>
-        public void Delete(Index entity)
+        public void Delete(RetreaveIndex entity)
         {
             _database.Delete(entity);
         }
@@ -62,9 +81,10 @@ namespace Retreave.Domain.DataAccess
         /// Gets any indexes with a null LastProcessed
         /// </summary>
         /// <returns></returns>
-        internal IEnumerable<Index> GetUnprocessedIndexes()
+        internal IEnumerable<RetreaveIndex> GetUnprocessedIndexes()
         {
-            return _database.Query<Index>("WHERE LastProcessed IS NULL");
+            var results= _database.Fetch<RetreaveIndex>("WHERE LastProcessed IS NULL AND Active = 1");
+            return FillResults(results);
         }
 
 
@@ -73,9 +93,53 @@ namespace Retreave.Domain.DataAccess
         /// </summary>
         /// <param name="minumumAge"></param>
         /// <returns></returns>
-        public Index GetMostOutdatedIndex(DateTime minumumAge)
+        public RetreaveIndex GetMostOutdatedIndex(DateTime minumumAge)
         {
-            return _database.SingleOrDefault<Index>("WHERE LastProcessed < @0 ORDER BY LastProcessed ASC");
+            var result = _database.FirstOrDefault<RetreaveIndex>("WHERE LastProcessed < @0 AND Active = 1 ORDER BY LastProcessed ASC ", minumumAge);
+            return FillResult(result);
+        }
+
+
+        /// <summary>
+        /// Gets the index by SQL
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <returns></returns>
+        public IEnumerable<RetreaveIndex> GetIndexesBySql(string sql)
+        {
+            List<RetreaveIndex> results = _database.Fetch<RetreaveIndex>("WHERE LastProcessed IS NULL");
+            return FillResults(results);
+        }
+
+        /// <summary>
+        /// Fills out each of the objects in a result set.
+        /// </summary>
+        /// <param name="results">an number of indexes returned in their basic form</param>
+        /// <returns></returns>
+        public IEnumerable<RetreaveIndex> FillResults(IEnumerable<RetreaveIndex> results)
+        {
+
+            foreach (RetreaveIndex index in results)
+            {
+                index.AssociatedUsers = _registeredUserDao.GetUsersByIndex(index).ToList();
+            }
+
+
+            return results;
+        }
+
+        /// <summary>
+        /// Fills out the rest of the properties on an index object
+        /// by executing more queries
+        /// </summary>
+        /// <param name="returnedIndex">an index returned in its basic form</param>
+        /// <returns></returns>
+        public RetreaveIndex FillResult(RetreaveIndex returnedIndex)
+        {
+            if (returnedIndex == null)
+                return null;
+            returnedIndex.AssociatedUsers = _registeredUserDao.GetUsersByIndex(returnedIndex).ToList();
+            return returnedIndex;
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Retreave.Domain.DataAccess;
+using Retreave.Domain.Enums;
 using Retreave.Domain.Models;
 
 namespace Retreave.Domain.Services
@@ -24,7 +25,15 @@ namespace Retreave.Domain.Services
         public void QueueUserStreamIndex(RegisteredUser user)
         {
             //add a a new StreamIndex to the users indexes
-            Index streamIndex =  user.AddTwitterStreamIndex();
+            RetreaveIndex streamIndex =  new RetreaveIndex()
+                              {
+                                  IndexType = IndexType.TwitterStreamIndex,
+                                  Name = user.UserName,
+                                  Active = true,
+                                  DateAdded = DateTime.Now
+                              };
+            streamIndex.AssociatedUsers.Add(user);
+
             _indexDao.SaveOrUpdate(streamIndex);
         }
 
@@ -32,10 +41,10 @@ namespace Retreave.Domain.Services
         /// <summary>
         /// Gets the next index to process
         /// </summary>
-        public Index GetNextIndexToProcess()
+        public RetreaveIndex GetNextIndexToProcess()
         {
           //first, see if there is any indexes that have not ever been processed.
-            IEnumerable<Index> unprocessedIndexes = _indexDao.GetUnprocessedIndexes();
+            IEnumerable<RetreaveIndex> unprocessedIndexes = _indexDao.GetUnprocessedIndexes();
 
             if (unprocessedIndexes.Count() > 0)
                 return unprocessedIndexes.First();
@@ -43,7 +52,6 @@ namespace Retreave.Domain.Services
             //get the most outdated index.
             //this may one day get updated with some sort of weighting on indexes,
             // ie most frequent visitors or something
-
             //Make sure the index is at least 5 minutes old
             DateTime fiveMinutesAgo = DateTime.Now.AddMinutes(-5);
 

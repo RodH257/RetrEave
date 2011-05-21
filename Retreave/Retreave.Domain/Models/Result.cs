@@ -10,7 +10,7 @@ namespace Retreave.Domain.Models
     {
         public Uri Url { get; set; }
         public string Title { get; set; }
-        public IList<Index> OriginatingIndexes { get; set; }
+        public IList<RetreaveIndex> OriginatingIndexes { get; set; }
         public IList<Linker> Linkers { get; set; }
     }
 }

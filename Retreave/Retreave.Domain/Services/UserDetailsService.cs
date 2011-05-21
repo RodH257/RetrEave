@@ -32,17 +32,17 @@ namespace Retreave.Domain.Services
             if (returnedUser == null)
             {
                 //save the user details 
-                RegisteredUser user = new RegisteredUser()
+                returnedUser = new RegisteredUser()
                                           {
                                               AuthDetails = authentication,
                                               UserName = userName,
                                           };
                 IUserDetailsService userDetailsService = ServiceLayer.UserDetailsService;
-                userDetailsService.CreateUser(user);
+                userDetailsService.CreateUser(returnedUser);
 
                 //setup the indexing of their tweets
                 IIndexQueuerService indexQueuerService = ServiceLayer.IndexQueuerService;
-                indexQueuerService.QueueUserStreamIndex(user);
+                indexQueuerService.QueueUserStreamIndex(returnedUser);
             }
             else
             {
@@ -54,6 +54,8 @@ namespace Retreave.Domain.Services
             return returnedUser;
         }
 
+
+ 
         public void CreateUser(RegisteredUser user)
         {
             _userDao.SaveOrUpdate(user);

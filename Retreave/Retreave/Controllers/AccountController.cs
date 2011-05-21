@@ -73,22 +73,6 @@ namespace Retreave.Controllers
             return View(user);
         }
 
-        public ActionResult ViewTweets(string accessToken, string accessTokenSecret)
-        {
-            TwitterService service2 = new TwitterService(AuthenticationTokens.TwitterConsumerKey, AuthenticationTokens.TwitterConsumerSecret);
-
-            service2.AuthenticateWith(
-                AuthenticationTokens.TwitterConsumerKey,
-                AuthenticationTokens.TwitterConsumerSecret,
-            accessToken, accessTokenSecret);
-            TwitterUser user2 = service2.VerifyCredentials();
-            var tweets = service2.ListTweetsMentioningMe(5);
-
-            ViewBag.Message = string.Format("Your username is {0}", user2.ScreenName);
-            ViewBag.Tweets = tweets;
-
-            return View("AuthorizeCallback");
-        }
 
     }
 }

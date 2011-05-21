@@ -13,7 +13,8 @@ namespace Retreave.Controllers
 
         public ActionResult Index()
         {
-            return View();
+            return Content("Not Implemented");
+            //return View();
         }
 
     }

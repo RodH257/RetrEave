@@ -7,7 +7,7 @@ namespace Retreave.Domain.Models
     /// </summary>
     public class SearchQuery
     {
-        public IList<Index> IndexesToSearch { get; set; }
+        public IList<RetreaveIndex> IndexesToSearch { get; set; }
         public string QueryText { get; set; }
         public RegisteredUser Querier { get; set; }
     }
