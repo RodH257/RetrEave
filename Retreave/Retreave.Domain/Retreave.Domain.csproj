@@ -68,6 +68,7 @@
     <Compile Include="Services\SearchEngineService.cs" />
     <Compile Include="Models\RegisteredUser.cs" />
     <Compile Include="Services\ServiceLayer.cs" />
+    <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
