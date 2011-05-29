@@ -35,11 +35,21 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Hammock.ClientProfile">
-      <HintPath>..\..\..\..\..\..\..\..\devel\References\Tweetsharp\lib\4.0\Hammock.ClientProfile.dll</HintPath>
+    <Reference Include="Hammock">
+      <HintPath>..\packages\Hammock.1.2.3\lib\net40\Hammock.dll</HintPath>
     </Reference>
-    <Reference Include="Lucene.Net">
+    <Reference Include="Hammock.ClientProfile, Version=1.0.0.0, Culture=neutral, PublicKeyToken=c148cfba29ed1a4d, processorArchitecture=MSIL">
+      <HintPath>..\packages\TweetSharp.2.0.6\lib\4.0\Hammock.ClientProfile.dll</HintPath>
+    </Reference>
+    <Reference Include="LinqToTwitter, Version=2.0.20.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\linqtotwitter.2.0.20\lib\4\LinqToTwitter.dll</HintPath>
+    </Reference>
+    <Reference Include="Lucene.Net, Version=2.9.2.2, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Lucene.2.9.2.2\lib\Lucene.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\TweetSharp.2.0.6\lib\4.0\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -48,17 +58,19 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="TweetSharp">
-      <HintPath>..\..\..\..\..\..\..\..\devel\References\Tweetsharp\lib\4.0\TweetSharp.dll</HintPath>
+    <Reference Include="TweetSharp, Version=2.0.0.0, Culture=neutral, PublicKeyToken=c148cfba29ed1a4d, processorArchitecture=MSIL">
+      <HintPath>..\packages\TweetSharp.2.0.6\lib\4.0\TweetSharp.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Indexers\IIndexer.cs" />
-    <Compile Include="Indexers\TwitterHashTagIndexer.cs" />
-    <Compile Include="Indexers\TwitterStreamIndexer.cs" />
+    <Compile Include="Indexers\TweetIndexer.cs" />
+    <Compile Include="Processors\RecentTweetsProcessor.cs" />
+    <Compile Include="Indexers\UrlIndexer.cs" />
     <Compile Include="Parsers\HtmlParser.cs" />
+    <Compile Include="Processors\StreamQueuedTweetsProcessor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Retrievers\StreamingTwitterFeedRetriever.cs" />
     <Compile Include="Retrievers\TwitterStreamRetriever.cs" />
     <Compile Include="Retrievers\WebPageRetriever.cs" />
   </ItemGroup>
@@ -70,10 +82,6 @@
     <ProjectReference Include="..\Retreave.Domain\Retreave.Domain.csproj">
       <Project>{B00B782F-4DC7-46A6-AA68-C725F46CB8CF}</Project>
       <Name>Retreave.Domain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Retreave.SearchEngine\Retreave.SearchEngine.csproj">
-      <Project>{F6A08753-48C5-4C3A-A7F1-413FA6B1E9E8}</Project>
-      <Name>Retreave.SearchEngine</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

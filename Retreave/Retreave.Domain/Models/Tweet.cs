@@ -18,6 +18,7 @@ namespace Retreave.Domain.Models
         public  string Content { get; set; }
         public DateTime DatePosted { get; set; }
         public int ReTweetCount { get; set; }
+        public long TweetId { get; set; }
 
         public override string ToString()
         {
@@ -26,7 +27,7 @@ namespace Retreave.Domain.Models
 
         public bool ContainsUrl()
         {
-            return Regex.IsMatch(Content, REGEX_FOR_URLS);
+            return Regex.IsMatch(Content, REGEX_FOR_URLS, RegexOptions.IgnoreCase);
         }
 
         /// <summary>
@@ -47,5 +48,24 @@ namespace Retreave.Domain.Models
             }
             return urls;
         }
+        
+        /// <summary>
+        /// Parsing code from 
+        /// http://blogs.msdn.com/b/bursteg/archive/2009/05/29/twitter-api-from-c-getting-a-user-s-time-line.aspx
+        /// </summary>
+        public static DateTime GetDateTimeFromTwitterFormat(string date)
+        {
+            string dayOfWeek = date.Substring(0, 3).Trim();
+            string month = date.Substring(4, 3).Trim();
+            string dayInMonth = date.Substring(8, 2).Trim();
+            string time = date.Substring(11, 9).Trim();
+            string offset = date.Substring(20, 5).Trim();
+            string year = date.Substring(25, 5).Trim();
+            string dateTime = string.Format("{0}-{1}-{2} {3}", dayInMonth, month, year, time);
+            DateTime ret = DateTime.Parse(dateTime);
+            return ret;
+        }
+
+        
     }
 }

@@ -9,5 +9,11 @@ namespace Retreave.Domain.Models
     {
         public SearchQuery OriginalQuery { get; set; }
         public IList<Result> Results { get; set; }
+        public ResultSet(SearchQuery originalQuery)
+        {
+            this.OriginalQuery = originalQuery;
+            this.Results = new List<Result>();
+
+        }
     }
 }

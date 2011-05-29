@@ -13,6 +13,7 @@ namespace Retreave.Domain.Models
     {
         public IndexType IndexType { get; set; }
         public string Name { get; set; }
+        public string IndexStreamIdentifier { get; set; }
         public int IndexId { get; set; }
         public bool Active { get; set; }
         public DateTime? LastProcessed { get; set; }

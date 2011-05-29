@@ -23,7 +23,7 @@ namespace Retreave.Domain.Services
         /// <param name="authentication"></param>
         /// <param name="userName"></param>
         /// <returns></returns>
-        public RegisteredUser AuthenticateTwitterAccount(TwitterAuthentication authentication, string userName)
+        public RegisteredUser AuthenticateTwitterAccount(TwitterAuthentication authentication, string userName, int twitterId)
         {
             //see if there is alraedy an account.
             RegisteredUser returnedUser = _userDao.GetUserByUserName(userName);
@@ -36,6 +36,7 @@ namespace Retreave.Domain.Services
                                           {
                                               AuthDetails = authentication,
                                               UserName = userName,
+                                              TwitterId = twitterId
                                           };
                 IUserDetailsService userDetailsService = ServiceLayer.UserDetailsService;
                 userDetailsService.CreateUser(returnedUser);
@@ -54,8 +55,15 @@ namespace Retreave.Domain.Services
             return returnedUser;
         }
 
+        /// <summary>
+        /// Gets a user by their user name
+        /// </summary>
+        public RegisteredUser GetUserByUserName(string userName)
+        {
+           return  _userDao.GetUserByUserName(userName);
+        }
 
- 
+
         public void CreateUser(RegisteredUser user)
         {
             _userDao.SaveOrUpdate(user);

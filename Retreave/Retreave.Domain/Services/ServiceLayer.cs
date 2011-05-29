@@ -28,7 +28,13 @@ namespace Retreave.Domain.Services
             get { return new UserDetailsService(new RegisteredUserDao()); }
         }
 
-
+        /// <summary>
+        /// Gets the Search Engine Service Layer
+        /// </summary>
+        public static ISearchEngineService SearchEngineService
+        {
+            get { return new SearchEngineService(); }
+        }
 
     }
 }

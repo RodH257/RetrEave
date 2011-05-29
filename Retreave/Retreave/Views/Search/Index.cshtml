@@ -1,0 +1,27 @@
+﻿@model Retreave.Models.NewSearchViewModel
+@{
+    ViewBag.Title = "Search ";
+}
+<h2>
+    New Search</h2>
+@using (Html.BeginForm("PerformSearch", "Search"))
+{
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <legend>Choose Indexes to Search</legend>
+        @foreach (var index in Model.SearchableIndexes)
+        {
+          <input type="checkbox"  name="SelectedIndexes" value="@index.IndexId" /> @index.Name <br />
+        }
+    </fieldset>
+    
+    <fieldset>
+       <legend>Enter Search Query</legend>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.SearchText)
+        </div>
+        <p>
+            <input type="submit" value="Create" />
+        </p>
+    </fieldset>
+}

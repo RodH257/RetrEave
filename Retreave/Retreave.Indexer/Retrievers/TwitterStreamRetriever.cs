@@ -15,6 +15,7 @@ namespace Retreave.Indexer.Retrievers
         public TwitterStreamRetriever(TwitterAuthentication authentication)
         {
             this._authentication = authentication;
+
         }
 
 
@@ -29,25 +30,55 @@ namespace Retreave.Indexer.Retrievers
             TwitterService twitterService = new TwitterService(AuthenticationTokens.TwitterConsumerKey, AuthenticationTokens.TwitterConsumerSecret);
             twitterService.AuthenticateWith(AuthenticationTokens.TwitterConsumerKey, AuthenticationTokens.TwitterConsumerSecret,
                                       _authentication.AccessToken, _authentication.AccessTokenSecret);
-            
+
             TwitterUser twitterUser = twitterService.VerifyCredentials();
+
 
             //ListTweetsOnHomeTimeline only returns 200 (or 800?) results each go. Need to send the requests a few times per hour 
             //with the paging/counts set?
-            var returnedTweets = twitterService.ListTweetsOnHomeTimeline(200);
+            IEnumerable<TwitterStatus> returnedTweets = null;
+
+            //try it a few times
+            int retryCount = 0;
+            while (returnedTweets == null)
+            {
+                returnedTweets = twitterService.ListTweetsOnHomeTimeline(200);
+
+                retryCount++;
+
+                //give up after 5 retries
+                if (retryCount == 5)
+                    return tweets;
+            }
 
             foreach (var returnedTweet in returnedTweets)
             {
                 Tweet tweet = new Tweet();
-                tweet.Author = new Linker()
-                                   {Id = returnedTweet.Author.ScreenName, Name = returnedTweet.Author.ScreenName};
-                tweet.Content = returnedTweet.Text;
-                tweet.DatePosted = returnedTweet.CreatedDate;
+
+                TwitterStatus statusToExamine = returnedTweet;
+
+                if (returnedTweet.RetweetedStatus != null)
+                {
+                    statusToExamine = returnedTweet.RetweetedStatus;
+
+                }
+
+                tweet.Author = new Linker() { Id = statusToExamine.Author.ScreenName, Name = statusToExamine.Author.ScreenName };
+                tweet.Content = statusToExamine.Text;
+                tweet.DatePosted = statusToExamine.CreatedDate;
+                tweet.TweetId = statusToExamine.Id;
+                tweet.ReTweetCount = GetRetweetCountFromRawData(statusToExamine.RawSource);
 
                 tweets.Add(tweet);
             }
             return tweets;
         }
-        
+
+        //TODO: parse Json
+        private int GetRetweetCountFromRawData(string data)
+        {
+            return 0;
+        }
+
     }
 }

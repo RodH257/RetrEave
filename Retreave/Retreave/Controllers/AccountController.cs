@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using Retreave.Domain.Models;
 using Retreave.Domain.Services;
+using Retreave.Models;
 using TweetSharp;
 using Retreave.Domain.Helpers;
 
@@ -40,7 +43,7 @@ namespace Retreave.Controllers
             // Step 3 - Exchange the Request Token for an Access Token
             TwitterService service = new TwitterService(AuthenticationTokens.TwitterConsumerKey, AuthenticationTokens.TwitterConsumerSecret);
             OAuthAccessToken accessToken = service.GetAccessToken(requestToken, oauth_verifier);
-
+            
 
             //Store the access token and secret and create a new user account
             TwitterAuthentication authentication = new TwitterAuthentication()
@@ -57,20 +60,50 @@ namespace Retreave.Controllers
 
             TwitterUser twitterUser = service.VerifyCredentials();
 
-            return RedirectToAction("UserProfile",new {authentication.AccessToken, authentication.AccessTokenSecret, twitterUser.ScreenName});
+
+            ServiceLayer.UserDetailsService.AuthenticateTwitterAccount(authentication, twitterUser.ScreenName,
+                                                                       twitterUser.Id);
+
+            //store the credentials in forms auth? 
+            var authTicket = new FormsAuthenticationTicket(1, twitterUser.ScreenName, DateTime.Now,
+                                                 DateTime.Now.AddMonths(6), true, "");
+
+            string cookieContents = FormsAuthentication.Encrypt(authTicket);
+            var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, cookieContents)
+            {
+                Expires = authTicket.Expiration,
+                Path = FormsAuthentication.FormsCookiePath
+            };
+
+            if (HttpContext != null)
+            {
+                HttpContext.Response.Cookies.Add(cookie);
+            }
+
+            //new {authentication.AccessToken, authentication.AccessTokenSecret, twitterUser.ScreenName}
+            return RedirectToAction("UserProfile");
         }
 
         /// <summary>
         /// Displays the users profile
         /// </summary>
-        public ActionResult UserProfile(TwitterAuthentication authentication, string screenName)
+        [Authorize]
+        public ActionResult UserProfile()
         {
             //Now pass onto controller to see if they need to store or create an account.
-            RegisteredUser user = ServiceLayer.UserDetailsService.AuthenticateTwitterAccount(authentication, screenName);
+            RegisteredUser user =
+                ServiceLayer.UserDetailsService.GetUserByUserName(HttpContext.User.Identity.Name);
+
 
             if (user == null)
-                return Content("Login Failed");
-            return View(user);
+                return RedirectToAction("Index");
+
+            IEnumerable<RetreaveIndex> indexes =  ServiceLayer.IndexQueuerService.GetIndexesQueuedByUser(user.UserId);
+
+            UserProfileViewModel viewModel = new UserProfileViewModel() {Indexes = indexes, User = user};
+            
+
+            return View(viewModel);
         }
 
 

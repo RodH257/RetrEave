@@ -25,12 +25,13 @@ namespace Retreave.Domain.Services
         public void QueueUserStreamIndex(RegisteredUser user)
         {
             //add a a new StreamIndex to the users indexes
-            RetreaveIndex streamIndex =  new RetreaveIndex()
+            RetreaveIndex streamIndex = new RetreaveIndex()
                               {
                                   IndexType = IndexType.TwitterStreamIndex,
-                                  Name = user.UserName,
+                                  Name = "Twitter Stream for " + user.UserName,
                                   Active = true,
-                                  DateAdded = DateTime.Now
+                                  DateAdded = DateTime.Now,
+                                  IndexStreamIdentifier = user.TwitterId.ToString()
                               };
             streamIndex.AssociatedUsers.Add(user);
 
@@ -43,21 +44,58 @@ namespace Retreave.Domain.Services
         /// </summary>
         public RetreaveIndex GetNextIndexToProcess()
         {
-          //first, see if there is any indexes that have not ever been processed.
+            //first, see if there is any indexes that have not ever been processed.
             IEnumerable<RetreaveIndex> unprocessedIndexes = _indexDao.GetUnprocessedIndexes();
 
-            if (unprocessedIndexes.Count() > 0)
-                return unprocessedIndexes.First();
+            return unprocessedIndexes.FirstOrDefault();
 
-            //get the most outdated index.
-            //this may one day get updated with some sort of weighting on indexes,
-            // ie most frequent visitors or something
-            //Make sure the index is at least 5 minutes old
-            DateTime fiveMinutesAgo = DateTime.Now.AddMinutes(-5);
-
-            return _indexDao.GetMostOutdatedIndex(fiveMinutesAgo);
         }
 
+        /// <summary>
+        /// Gets the indexes queued by a certain user
+        /// </summary>
+        public IEnumerable<RetreaveIndex> GetIndexesQueuedByUser(int userId)
+        {
+            return _indexDao.GetIndexesbyUserId(userId);
+        }
+
+        /// <summary>
+        /// Gets the indexes by ID list
+        /// DEBT: Could be combined into one query 
+        /// </summary>
+        public IEnumerable<RetreaveIndex> GetIndexesByIdList(IEnumerable<int> selectedIndexes)
+        {
+            IList<RetreaveIndex> indexes = new List<RetreaveIndex>();
+
+            foreach (int indexId in selectedIndexes)
+            {
+                indexes.Add(_indexDao.GetById(indexId));
+            }
+
+            return indexes;
+        }
+
+
+        /// <summary>
+        /// Gets the indexes to stream
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<RetreaveIndex> GetUserIndexesToStream()
+        {
+            return _indexDao.GetActiveUserIndexes();
+        }
+
+        public IEnumerable<RetreaveIndex> GetIndexesByUniqueIdList(List<string> indexIds)
+        {
+            IList<RetreaveIndex> indexes = new List<RetreaveIndex>();
+
+            foreach (string indexId in indexIds)
+            {
+                indexes.Add(_indexDao.GetByUniqueIdentifier(indexId));
+            }
+
+            return indexes;
+        }
 
         /// <summary>
         /// Sets an index complete.

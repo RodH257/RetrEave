@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Lucene.Net">
+      <HintPath>..\packages\Lucene.2.9.2.2\lib\Lucene.Net.dll</HintPath>
+    </Reference>
     <Reference Include="Ninject">
       <HintPath>..\packages\Ninject.2.2.1.4\lib\net40-Full\Ninject.dll</HintPath>
     </Reference>
@@ -63,9 +66,10 @@
     <Compile Include="Models\SearchQuery.cs" />
     <Compile Include="Services\IIndexQueuerService.cs" />
     <Compile Include="Services\IndexQueuerService.cs" />
+    <Compile Include="Services\ISearchEngineService.cs" />
     <Compile Include="Services\IUserDetailsService.cs" />
-    <Compile Include="Services\UserDetailsService.cs" />
     <Compile Include="Services\SearchEngineService.cs" />
+    <Compile Include="Services\UserDetailsService.cs" />
     <Compile Include="Models\RegisteredUser.cs" />
     <Compile Include="Services\ServiceLayer.cs" />
     <Compile Include="Settings.cs" />

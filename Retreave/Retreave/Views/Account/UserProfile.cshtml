@@ -1,25 +1,27 @@
-﻿@model Retreave.Domain.Models.RegisteredUser
-
+﻿@model  Retreave.Models.UserProfileViewModel
 @{
-    ViewBag.Title = "UserProfile";
+    ViewBag.Title = "Account Details";
+    var user = Model.User;
+    var indexes = Model.Indexes;
 }
-
-<h2>UserProfile</h2>
-
-<fieldset>
-    <legend>RegisteredUser</legend>
-
-    <div class="display-label">UserId</div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.UserId)
-    </div>
-
-    <div class="display-label">UserName</div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.UserName)
-    </div>
-</fieldset>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { /* id=Model.PrimaryKey */ }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+<h2>
+    Account Details for
+    @user.UserName</h2>
+<div>
+    <h2>
+        Linked Accounts</h2>
+    <ul>
+        <li>Twitter Account
+            @user.UserName</li>
+    </ul>
+</div>
+<div>
+    <h2>
+        Active Indexes</h2>
+    <ul>
+        @foreach (var index in indexes)
+        {
+            <li>@index.Name</li>
+        }
+    </ul>
+</div>

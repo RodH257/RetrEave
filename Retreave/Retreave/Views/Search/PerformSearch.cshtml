@@ -1,0 +1,37 @@
+﻿@using Retreave.Domain.Models
+@model Retreave.Domain.Models.ResultSet
+@{
+    ViewBag.Title = "Search Results for "+ @Model.OriginalQuery.QueryText;
+}
+<h2>
+    Search Results for @Model.OriginalQuery.QueryText;</h2>
+<div>
+    <h3>
+        Search Performed on Indexes:</h3>
+    <ul>
+        @foreach (RetreaveIndex index in Model.OriginalQuery.IndexesToSearch)
+        {
+            <li>@index.Name</li>
+        }
+    </ul>
+</div>
+<hr/>
+@foreach (Result result in Model.Results)
+{
+    <div>
+        <a href="@result.Url">@result.Title</a>
+        <br />
+        From Indexes:
+        @foreach (var index in result.OriginatingIndexes)
+        {
+            <text>@index.Name </text>
+        }
+        <br />
+        Linked By
+        @foreach (var linker in result.Linkers)
+        {
+            <text>@linker.Name </text>
+        }
+    </div>
+
+}

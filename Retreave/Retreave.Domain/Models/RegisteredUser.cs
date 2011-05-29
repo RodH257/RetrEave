@@ -13,6 +13,7 @@ namespace Retreave.Domain.Models
     {
         public int UserId { get; set; }
         public string UserName { get; set; }
+        public int TwitterId { get; set; }
 
         [PetaPoco.Ignore]
         public TwitterAuthentication AuthDetails { get; set; }

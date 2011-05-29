@@ -78,9 +78,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Retreave.SearchEngine\Retreave.SearchEngine.csproj">
-      <Project>{F6A08753-48C5-4C3A-A7F1-413FA6B1E9E8}</Project>
-      <Name>Retreave.SearchEngine</Name>
+    <ProjectReference Include="..\Retreave.Domain\Retreave.Domain.csproj">
+      <Project>{B00B782F-4DC7-46A6-AA68-C725F46CB8CF}</Project>
+      <Name>Retreave.Domain</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

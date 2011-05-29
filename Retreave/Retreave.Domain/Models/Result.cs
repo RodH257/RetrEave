@@ -8,9 +8,15 @@ namespace Retreave.Domain.Models
     /// </summary>
     public class Result
     {
-        public Uri Url { get; set; }
+        public string Url { get; set; }
         public string Title { get; set; }
         public IList<RetreaveIndex> OriginatingIndexes { get; set; }
         public IList<Linker> Linkers { get; set; }
+         
+        public Result()
+        {
+            this.OriginatingIndexes = new List<RetreaveIndex>();
+            this.Linkers = new List<Linker>();
+        }
     }
 }

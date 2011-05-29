@@ -99,18 +99,6 @@ namespace Retreave.Domain.DataAccess
             return FillResult(result);
         }
 
-
-        /// <summary>
-        /// Gets the index by SQL
-        /// </summary>
-        /// <param name="sql"></param>
-        /// <returns></returns>
-        public IEnumerable<RetreaveIndex> GetIndexesBySql(string sql)
-        {
-            List<RetreaveIndex> results = _database.Fetch<RetreaveIndex>("WHERE LastProcessed IS NULL");
-            return FillResults(results);
-        }
-
         /// <summary>
         /// Fills out each of the objects in a result set.
         /// </summary>
@@ -140,6 +128,47 @@ namespace Retreave.Domain.DataAccess
                 return null;
             returnedIndex.AssociatedUsers = _registeredUserDao.GetUsersByIndex(returnedIndex).ToList();
             return returnedIndex;
+        }
+
+        /// <summary>
+        /// Gets the indexes a user is associated with
+        /// </summary>
+        internal IEnumerable<RetreaveIndex> GetIndexesbyUserId(int userId)
+        {
+            var sql = Sql.Builder
+                     .Append(" Select I.*")
+                     .Append("From [RetrEave].[dbo].Indexes I ")
+                     .Append("JOIN [RetrEave].[dbo].Users_Indexes")
+                     .Append("ON I.IndexId = Users_Indexes.IndexId ")
+                     .Where("Users_Indexes.UserId = @0", userId);
+
+
+            var results = _database.Fetch<RetreaveIndex>(sql);
+            return FillResults(results);
+        }
+
+        /// <summary>
+        /// Gets the user indexes taht are active
+        /// </summary>
+        /// <returns></returns>
+        internal IEnumerable<RetreaveIndex> GetActiveUserIndexes()
+        {
+            var sql = Sql.Builder
+            .Append(" Select I.*")
+            .Append("From [RetrEave].[dbo].Indexes I ")
+            .Append("JOIN [RetrEave].[dbo].Users_Indexes")
+            .Append("ON I.IndexId = Users_Indexes.IndexId ")
+            .Where("I.Active = 1");
+
+
+            var results = _database.Fetch<RetreaveIndex>(sql);
+            return FillResults(results);
+        }
+
+        internal RetreaveIndex GetByUniqueIdentifier(string indexStreamIdentifier)
+        {
+            var result = _database.SingleOrDefault<RetreaveIndex>("where IndexStreamIdentifier=@0", indexStreamIdentifier);
+            return FillResult(result);
         }
     }
 }
